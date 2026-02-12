@@ -5,3 +5,20 @@ export interface CurrentWeather {
   humidity: number;
   windSpeed: number;
 }
+
+export interface HourlyWeather {
+  time: string;
+  temp: number;
+  icon: string;
+}
+
+export interface DailyWeather {
+  tempMin: number;
+  tempMax: number;
+}
+
+export interface WeatherData {
+  current: CurrentWeather;
+  daily: DailyWeather;
+  hourly: HourlyWeather[];
+}
