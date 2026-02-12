@@ -27,3 +27,20 @@ export async function geocodeLocation(
   const { lat, lon, name } = results[0];
   return { lat, lon, name };
 }
+
+/**
+ * 좌표(위도/경도)를 한국어 지명으로 변환하는 함수 (Reverse Geocoding)
+ */
+export async function reverseGeocode(
+  lat: number,
+  lon: number,
+): Promise<string> {
+  const results = await fetchWeatherApi<GeocodingResponse[]>(
+    '/geo/1.0/reverse',
+    { lat, lon, limit: 1 },
+  );
+
+  if (results.length === 0) return '알 수 없는 위치';
+
+  return results[0].local_names?.ko ?? results[0].name;
+}

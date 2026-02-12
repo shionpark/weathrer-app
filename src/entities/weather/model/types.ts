@@ -4,6 +4,7 @@ export interface CurrentWeather {
   icon: string;
   humidity: number;
   windSpeed: number;
+  name: string;
 }
 
 export interface HourlyWeather {

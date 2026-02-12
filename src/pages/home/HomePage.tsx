@@ -1,30 +1,44 @@
-import { searchDistricts } from '@/entities/location/lib/searchDistricts';
+import { useReverseGeocode } from '@/entities/location/model/useLocation';
 import {
   useCurrentWeather,
   useForecast,
 } from '@/entities/weather/model/useWeather';
+import { useGeolocation } from '@/features/detect-location/model/useGeolocation';
 import { ErrorMessage } from '@/shared/ui/ErrorMessage';
 import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
+import { WeatherDetail } from '@/widgets/weather-detail/ui/WeatherDetail';
 
 export function HomePage() {
-  const { data, isLoading, error } = useCurrentWeather(37.5665, 126.978);
-  const { data: forecastData } = useForecast(37.5665, 126.978);
+  const { lat, lon, loading: geoLoading, error: geoError } = useGeolocation();
+  const { data: locationName } = useReverseGeocode(lat, lon);
 
-  console.log(data);
-  console.log('forecastData: ', forecastData);
+  const {
+    data: current,
+    isLoading: weatherLoading,
+    error: weatherError,
+  } = useCurrentWeather(lat, lon);
+  const { data: forecast, isLoading: forecastLoading } = useForecast(lat, lon);
 
-  const results = searchDistricts('종로');
-  console.log('Districts: ', results);
+  if (geoLoading || weatherLoading || forecastLoading) {
+    return <LoadingSpinner />;
+  }
 
-  if (isLoading) return <LoadingSpinner />;
-  if (error) return <ErrorMessage message={error.message} />;
+  if (geoError) {
+    return <ErrorMessage message="위치 정보를 가져올 수 없습니다." />;
+  }
+
+  if (weatherError || !current || !forecast) {
+    return <ErrorMessage message="날씨 정보를 불러올 수 없습니다." />;
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <h1 className="p-4 text-2xl font-bold">날씨 앱</h1>
-      <pre>{JSON.stringify(data, null, 2)}</pre>
-      <pre>{JSON.stringify(forecastData, null, 2)}</pre>
-      <pre>{JSON.stringify(results, null, 2)}</pre>
+    <div className="mx-auto max-w-md p-4">
+      <WeatherDetail
+        current={current}
+        daily={forecast.daily}
+        hourly={forecast.hourly}
+        locationName={locationName || '현재 위치'}
+      />
     </div>
   );
 }
