@@ -1,3 +1,4 @@
+import { searchDistricts } from '@/entities/location/lib/searchDistricts';
 import {
   useCurrentWeather,
   useForecast,
@@ -10,6 +11,9 @@ export function HomePage() {
   console.log(data);
   console.log('forecastData: ', forecastData);
 
+  const results = searchDistricts('종로');
+  console.log('Districts: ', results);
+
   if (isLoading) return <div>로딩중...</div>;
   if (error) return <div>에러 발생</div>;
 
@@ -18,6 +22,7 @@ export function HomePage() {
       <h1 className="p-4 text-2xl font-bold">날씨 앱</h1>
       <pre>{JSON.stringify(data, null, 2)}</pre>
       <pre>{JSON.stringify(forecastData, null, 2)}</pre>
+      <pre>{JSON.stringify(results, null, 2)}</pre>
     </div>
   );
 }
