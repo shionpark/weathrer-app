@@ -1,3 +1,4 @@
+import { useReverseGeocode } from '@/entities/location/model/useLocation';
 import {
   useCurrentWeather,
   useForecast,
@@ -9,6 +10,8 @@ import { WeatherDetail } from '@/widgets/weather-detail/ui/WeatherDetail';
 
 export function HomePage() {
   const { lat, lon, loading: geoLoading, error: geoError } = useGeolocation();
+  const { data: locationName } = useReverseGeocode(lat, lon);
+
   const {
     data: current,
     isLoading: weatherLoading,
@@ -34,7 +37,7 @@ export function HomePage() {
         current={current}
         daily={forecast.daily}
         hourly={forecast.hourly}
-        locationName="현재 위치"
+        locationName={locationName || '현재 위치'}
       />
     </div>
   );
