@@ -41,7 +41,7 @@ export function WeatherDetail({
           <h3 className="mb-2 text-sm font-medium text-gray-500">
             시간대별 날씨
           </h3>
-          <div className="flex gap-4 overflow-x-auto py-2">
+          <div className="flex justify-between gap-4 overflow-x-auto py-2">
             {hourly.map((item) => (
               <div key={item.time} className="flex flex-col items-center gap-1">
                 <span className="text-xs text-gray-500">{item.time}</span>

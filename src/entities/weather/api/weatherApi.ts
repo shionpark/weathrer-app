@@ -8,6 +8,7 @@ import type {
 } from '../model/types';
 
 interface CurrentWeatherResponse {
+  name: string;
   main: { temp: number; temp_min: number; temp_max: number; humidity: number };
   weather: { description: string; icon: string }[];
   wind: { speed: number };
@@ -40,6 +41,7 @@ export async function fetchCurrentWeather(
     icon: data.weather[0].icon,
     humidity: data.main.humidity,
     windSpeed: data.wind.speed,
+    name: data.name,
   };
 }
 
@@ -59,16 +61,23 @@ export async function fetchForecast(
     lon,
   });
 
+  const now = Date.now();
+  const next24h = now + 24 * 60 * 60 * 1000;
+  const upcomingItems = data.list.filter((item) => {
+    const itemTime = new Date(item.dt_txt).getTime();
+    return itemTime >= now && itemTime <= next24h;
+  });
+
   const today = new Date().toISOString().split('T')[0];
   const todayItems = data.list.filter((item) => item.dt_txt.startsWith(today));
+  const todayTemps = todayItems.map((item) => item.main.temp);
 
-  const allTemps = todayItems.map((item) => item.main.temp);
   const daily: DailyWeather = {
-    tempMin: Math.min(...allTemps),
-    tempMax: Math.max(...allTemps),
+    tempMin: Math.min(...todayTemps),
+    tempMax: Math.max(...todayTemps),
   };
 
-  const hourly: HourlyWeather[] = todayItems.map((item) => ({
+  const hourly: HourlyWeather[] = upcomingItems.map((item) => ({
     time: formatTime(item.dt_txt),
     temp: item.main.temp,
     icon: item.weather[0].icon,
