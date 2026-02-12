@@ -21,6 +21,10 @@ interface ForecastResponse {
   }[];
 }
 
+/**
+ * 현재 위치(위도/경도) 기준의 실시간 날씨 정보를 조회하는 훅
+ * OpenWeather `weather` 엔드포인트를 호출해 필요한 필드만 매핑함
+ */
 export async function fetchCurrentWeather(
   lat: number,
   lon: number,
@@ -39,6 +43,13 @@ export async function fetchCurrentWeather(
   };
 }
 
+/**
+ * 오늘 하루의 최저/최고 기온과 시간대별 예보를 반환하는 훅
+ * OpenWeather 3시간 간격 예보(`forecast`)에서 오늘 날짜만 필터링해
+ * - daily: 오늘의 최저·최고 기온
+ * - hourly: 오늘 시간대별 기온/아이콘 리스트
+ * 로 가공함
+ */
 export async function fetchForecast(
   lat: number,
   lon: number,
