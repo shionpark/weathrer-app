@@ -3,6 +3,8 @@ import {
   useCurrentWeather,
   useForecast,
 } from '@/entities/weather/model/useWeather';
+import { ErrorMessage } from '@/shared/ui/ErrorMessage';
+import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
 
 export function HomePage() {
   const { data, isLoading, error } = useCurrentWeather(37.5665, 126.978);
@@ -14,8 +16,8 @@ export function HomePage() {
   const results = searchDistricts('종로');
   console.log('Districts: ', results);
 
-  if (isLoading) return <div>로딩중...</div>;
-  if (error) return <div>에러 발생</div>;
+  if (isLoading) return <LoadingSpinner />;
+  if (error) return <ErrorMessage message={error.message} />;
 
   return (
     <div className="min-h-screen bg-gray-50">
