@@ -9,6 +9,7 @@ import {
 } from '@/entities/weather/model/useWeather';
 import { formatTemp } from '@/shared/lib/formatters';
 import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
+import { Modal } from '@/shared/ui/Modal';
 
 interface FavoriteCardProps {
   favorite: Favorite;
@@ -139,84 +140,59 @@ export function FavoriteCard({
         </div>
       </div>
 
-      {/* Edit alias modal */}
-      {isEditing && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
-          onClick={() => setIsEditing(false)}
-          onKeyDown={(e) => e.key === 'Escape' && setIsEditing(false)}
-          role="dialog"
-          aria-modal="true"
-        >
-          <div
-            className="w-full max-w-sm rounded-2xl bg-white p-5 shadow-lg"
-            onClick={(e) => e.stopPropagation()}
+      <Modal
+        open={isEditing}
+        onClose={() => setIsEditing(false)}
+        title="별칭 수정"
+        description="즐겨찾기 카드에 표시할 이름을 입력하세요."
+      >
+        <input
+          value={aliasInput}
+          onChange={(e) => setAliasInput(e.target.value)}
+          className="mt-4 w-full rounded-lg border border-gray-200 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+          autoFocus
+        />
+        <div className="mt-4 flex justify-end gap-2">
+          <button
+            onClick={() => setIsEditing(false)}
+            className="rounded-lg px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100"
           >
-            <h3 className="text-lg font-semibold text-gray-900">별칭 수정</h3>
-            <p className="mt-1 text-sm text-gray-500">
-              즐겨찾기 카드에 표시할 이름을 입력하세요.
-            </p>
-            <input
-              value={aliasInput}
-              onChange={(e) => setAliasInput(e.target.value)}
-              className="mt-4 w-full rounded-lg border border-gray-200 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
-              autoFocus
-            />
-            <div className="mt-4 flex justify-end gap-2">
-              <button
-                onClick={() => setIsEditing(false)}
-                className="rounded-lg px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100"
-              >
-                취소
-              </button>
-              <button
-                onClick={handleEditSave}
-                className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 focus-visible:ring-2 focus-visible:ring-blue-300 focus-visible:ring-offset-1 focus-visible:outline-none"
-              >
-                저장
-              </button>
-            </div>
-          </div>
+            취소
+          </button>
+          <button
+            onClick={handleEditSave}
+            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 focus-visible:ring-2 focus-visible:ring-blue-300 focus-visible:ring-offset-1 focus-visible:outline-none"
+          >
+            저장
+          </button>
         </div>
-      )}
+      </Modal>
 
-      {/* Delete confirm modal */}
-      {isConfirmDelete && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
-          onClick={() => setIsConfirmDelete(false)}
-        >
-          <div
-            className="w-full max-w-sm rounded-2xl bg-white p-5 shadow-lg"
-            onClick={(e) => e.stopPropagation()}
+      <Modal
+        open={isConfirmDelete}
+        onClose={() => setIsConfirmDelete(false)}
+        title="삭제하시겠습니까?"
+        description="이 즐겨찾기를 삭제해도 날씨 데이터에는 영향을 주지 않습니다."
+      >
+        <div className="mt-4 flex justify-end gap-2">
+          <button
+            onClick={() => setIsConfirmDelete(false)}
+            className="rounded-lg px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100"
           >
-            <h3 className="text-lg font-semibold text-gray-900">
-              삭제하시겠습니까?
-            </h3>
-            <p className="mt-1 text-sm text-gray-500">
-              이 즐겨찾기를 삭제해도 날씨 데이터에는 영향을 주지 않습니다.
-            </p>
-            <div className="mt-4 flex justify-end gap-2">
-              <button
-                onClick={() => setIsConfirmDelete(false)}
-                className="rounded-lg px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100"
-              >
-                취소
-              </button>
-              <button
-                onClick={() => {
-                  onRemove(favorite.id);
-                  toast.success('즐겨찾기에서 삭제되었습니다');
-                  setIsConfirmDelete(false);
-                }}
-                className="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700 focus-visible:ring-2 focus-visible:ring-red-300 focus-visible:ring-offset-1 focus-visible:outline-none"
-              >
-                삭제
-              </button>
-            </div>
-          </div>
+            취소
+          </button>
+          <button
+            onClick={() => {
+              onRemove(favorite.id);
+              toast.success('즐겨찾기에서 삭제되었습니다');
+              setIsConfirmDelete(false);
+            }}
+            className="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700 focus-visible:ring-2 focus-visible:ring-red-300 focus-visible:ring-offset-1 focus-visible:outline-none"
+          >
+            삭제
+          </button>
         </div>
-      )}
+      </Modal>
     </>
   );
 }
