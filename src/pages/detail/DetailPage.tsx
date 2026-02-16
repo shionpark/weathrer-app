@@ -1,4 +1,4 @@
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { useFavorites } from '@/entities/favorite/model/useFavorites';
@@ -12,6 +12,7 @@ import { WeatherDetail } from '@/widgets/weather-detail/ui/WeatherDetail';
 
 export function DetailPage() {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const lat = searchParams.get('lat') ? Number(searchParams.get('lat')) : null;
   const lon = searchParams.get('lon') ? Number(searchParams.get('lon')) : null;
   const name = searchParams.get('name') ?? '알 수 없는 장소';
@@ -26,6 +27,18 @@ export function DetailPage() {
 
   const isFavoriteLocation = lat && lon ? isFavorite(lat, lon) : false;
   const favoriteId = lat && lon ? `${lat}_${lon}` : null;
+
+  const favoriteButtonClass = isFavoriteLocation
+    ? 'mb-4 w-full rounded-lg border border-red-500 bg-red-50 px-4 py-3 text-red-600 transition-colors hover:bg-red-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-200 focus-visible:ring-offset-1'
+    : 'mb-4 w-full rounded-lg border border-blue-600 bg-blue-600 px-4 py-3 text-white transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300 focus-visible:ring-offset-1 shadow-sm';
+
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate('/');
+    }
+  };
 
   const handleToggleFavorite = () => {
     if (!lat || !lon) return;
@@ -57,10 +70,17 @@ export function DetailPage() {
 
   return (
     <div className="mx-auto max-w-md p-4">
-      <button
-        onClick={handleToggleFavorite}
-        className="mb-4 w-full rounded-lg border border-blue-500 bg-white px-4 py-2 text-blue-500 hover:bg-blue-50"
-      >
+      <div className="mb-3 flex items-center justify-between">
+        <button
+          type="button"
+          onClick={handleBack}
+          className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 focus-visible:ring-2 focus-visible:ring-blue-300 focus-visible:ring-offset-1 focus-visible:outline-none"
+        >
+          ← 뒤로가기
+        </button>
+      </div>
+
+      <button onClick={handleToggleFavorite} className={favoriteButtonClass}>
         {isFavoriteLocation ? '즐겨찾기 해제' : '즐겨찾기 추가'}
       </button>
 

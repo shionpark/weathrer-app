@@ -5,6 +5,7 @@ import {
 import { useGeolocation } from '@/features/detect-location/model/useGeolocation';
 import { ErrorMessage } from '@/shared/ui/ErrorMessage';
 import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
+import { FavoriteList } from '@/widgets/favorite-list/ui/FavoriteList';
 import { LocationSearchBar } from '@/widgets/location-search/ui/LocationSearchBar';
 import { WeatherDetail } from '@/widgets/weather-detail/ui/WeatherDetail';
 
@@ -20,6 +21,11 @@ export function HomePage() {
   return (
     <div className="mx-auto max-w-md p-4">
       <LocationSearchBar />
+
+      <div className="mt-6">
+        <h2 className="mb-4 text-lg font-bold">즐겨찾기</h2>
+        <FavoriteList />
+      </div>
 
       <div className="mt-6">
         {(geoLoading || weatherLoading || forecastLoading) && (
