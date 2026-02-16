@@ -25,7 +25,6 @@ export function CurrentHero({
         <div className="flex flex-col gap-6">
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-sm text-gray-500">Now</p>
               <h2 className="text-2xl font-semibold text-gray-900">
                 {locationName}
               </h2>

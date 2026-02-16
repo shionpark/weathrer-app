@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 import { geocodeLocation } from '@/entities/location/api/geocodingApi';
 import type { LocationInfo } from '@/entities/location/model/types';
@@ -15,7 +16,7 @@ export function LocationSearchBar() {
     const geo = await geocodeLocation(searchTerm);
 
     if (!geo) {
-      alert('해당 장소의 정보가 제공되지 않습니다.');
+      toast.error('해당 장소의 정보가 제공되지 않습니다.');
       return;
     }
 
@@ -26,7 +27,7 @@ export function LocationSearchBar() {
   };
 
   return (
-    <div className="relative">
+    <div className="relative min-w-[280px]">
       <SearchInput value={query} onChange={setQuery} />
       <SearchResultList
         results={results}
