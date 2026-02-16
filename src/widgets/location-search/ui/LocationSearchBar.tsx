@@ -28,7 +28,11 @@ export function LocationSearchBar() {
   return (
     <div className="relative">
       <SearchInput value={query} onChange={setQuery} />
-      <SearchResultList results={results} onSelect={handleSelect} />
+      <SearchResultList
+        results={results}
+        onSelect={handleSelect}
+        query={query}
+      />
     </div>
   );
 }

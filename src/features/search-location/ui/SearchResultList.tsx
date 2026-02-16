@@ -3,10 +3,23 @@ import type { LocationInfo } from '@/entities/location/model/types';
 interface SearchResultListProps {
   results: LocationInfo[];
   onSelect: (location: LocationInfo) => void;
+  query: string;
 }
 
-export function SearchResultList({ results, onSelect }: SearchResultListProps) {
-  if (results.length === 0) return null;
+export function SearchResultList({
+  results,
+  onSelect,
+  query,
+}: SearchResultListProps) {
+  if (!query.trim()) return null;
+
+  if (results.length === 0) {
+    return (
+      <div className="absolute z-10 mt-1 w-full rounded-lg border border-gray-200 bg-white p-4 text-center text-gray-500 shadow-lg">
+        검색 결과가 없습니다.
+      </div>
+    );
+  }
 
   return (
     <ul className="absolute z-10 mt-1 max-h-60 w-full overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-lg">
