@@ -17,7 +17,6 @@ export function HourlyScroller({
     <div className="rounded-3xl bg-white p-6 shadow-sm">
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-lg font-semibold text-gray-800">{title}</h2>
-        <span className="text-sm text-gray-500">24h</span>
       </div>
 
       {isLoading && (
@@ -31,7 +30,7 @@ export function HourlyScroller({
       )}
 
       {!isLoading && hourly.length > 0 && (
-        <div className="scroll-hide flex gap-4 overflow-x-auto pb-2 min-w-0">
+        <div className="scroll-hide flex min-w-0 gap-4 overflow-x-auto pb-2">
           {hourly.map((item) => (
             <div
               key={item.time}

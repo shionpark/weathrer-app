@@ -1,15 +1,17 @@
-import type { CurrentWeather } from '@/entities/weather/model/types';
+import type { CurrentWeather, DailyWeather } from '@/entities/weather/model/types';
 import { formatTemp } from '@/shared/lib/formatters';
 import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
 
 interface CurrentHeroProps {
   current?: CurrentWeather;
+  daily?: DailyWeather;
   locationName?: string;
   isLoading?: boolean;
 }
 
 export function CurrentHero({
   current,
+  daily,
   locationName = '현재 위치',
   isLoading = false,
 }: CurrentHeroProps) {
@@ -40,6 +42,11 @@ export function CurrentHero({
           <div>
             <p className="text-6xl font-bold text-gray-900">
               {formatTemp(current.temp)}
+              {daily && (
+                <span className="ml-3 align-middle text-xl font-semibold text-gray-400">
+                  ↓ {formatTemp(daily.tempMin)} / ↑ {formatTemp(daily.tempMax)}
+                </span>
+              )}
             </p>
             <p className="mt-2 text-sm text-gray-500">
               습도 {current.humidity}% · 풍속 {current.windSpeed} m/s
