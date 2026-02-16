@@ -1,4 +1,3 @@
-import { useReverseGeocode } from '@/entities/location/model/useLocation';
 import {
   useCurrentWeather,
   useForecast,
@@ -6,12 +5,11 @@ import {
 import { useGeolocation } from '@/features/detect-location/model/useGeolocation';
 import { ErrorMessage } from '@/shared/ui/ErrorMessage';
 import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
+import { LocationSearchBar } from '@/widgets/location-search/ui/LocationSearchBar';
 import { WeatherDetail } from '@/widgets/weather-detail/ui/WeatherDetail';
 
 export function HomePage() {
   const { lat, lon, loading: geoLoading, error: geoError } = useGeolocation();
-  const { data: locationName } = useReverseGeocode(lat, lon);
-
   const {
     data: current,
     isLoading: weatherLoading,
@@ -19,26 +17,30 @@ export function HomePage() {
   } = useCurrentWeather(lat, lon);
   const { data: forecast, isLoading: forecastLoading } = useForecast(lat, lon);
 
-  if (geoLoading || weatherLoading || forecastLoading) {
-    return <LoadingSpinner />;
-  }
-
-  if (geoError) {
-    return <ErrorMessage message="위치 정보를 가져올 수 없습니다." />;
-  }
-
-  if (weatherError || !current || !forecast) {
-    return <ErrorMessage message="날씨 정보를 불러올 수 없습니다." />;
-  }
-
   return (
     <div className="mx-auto max-w-md p-4">
-      <WeatherDetail
-        current={current}
-        daily={forecast.daily}
-        hourly={forecast.hourly}
-        locationName={locationName || '현재 위치'}
-      />
+      <LocationSearchBar />
+
+      <div className="mt-6">
+        {(geoLoading || weatherLoading || forecastLoading) && (
+          <LoadingSpinner />
+        )}
+
+        {geoError && <ErrorMessage message="위치 정보를 가져올 수 없습니다." />}
+
+        {weatherError && (
+          <ErrorMessage message="날씨 정보를 불러올 수 없습니다." />
+        )}
+
+        {current && forecast && (
+          <WeatherDetail
+            current={current}
+            daily={forecast.daily}
+            hourly={forecast.hourly}
+            locationName="현재 위치"
+          />
+        )}
+      </div>
     </div>
   );
 }
