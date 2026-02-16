@@ -1,10 +1,20 @@
-import { useFavorites } from '@/entities/favorite/model/useFavorites';
+import type { Favorite } from '@/entities/favorite/model/types';
 
 import { FavoriteCard } from './FavoriteCard';
 
-export function FavoriteList() {
-  const { favorites, removeFavorite, updateAlias } = useFavorites();
+interface FavoriteListProps {
+  favorites: Favorite[];
+  onRemove: (id: string) => void;
+  onEditAlias: (id: string, alias: string) => void;
+  onSelect?: (id: string, name: string, lat: number, lon: number) => void;
+}
 
+export function FavoriteList({
+  favorites,
+  onRemove,
+  onEditAlias,
+  onSelect,
+}: FavoriteListProps) {
   if (favorites.length === 0) {
     return (
       <div className="rounded-lg border border-gray-200 bg-gray-50 p-8 text-center text-gray-500">
@@ -14,13 +24,14 @@ export function FavoriteList() {
   }
 
   return (
-    <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
+    <div className="grid grid-cols-2 gap-4 md:grid-cols-3 min-w-0">
       {favorites.map((fav) => (
         <FavoriteCard
           key={fav.id}
           favorite={fav}
-          onRemove={removeFavorite}
-          onEditAlias={updateAlias}
+          onRemove={onRemove}
+          onEditAlias={onEditAlias}
+          onSelect={onSelect}
         />
       ))}
     </div>
